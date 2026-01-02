@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FixIt</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                <i class="fas fa-tools"></i> FixIt
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="report.html" class="nav-link">Report Issue</a></li>
+                <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>Issue Dashboard</h1>
+            <p>View and manage all reported public issues</p>
+        </div>
+    </section>
+
+    <!-- Dashboard Content -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>All Reports</h2>
+                <div>
+                    <a href="report.html" class="btn" style="margin-right: 1rem;">
+                        <i class="fas fa-plus"></i> New Report
+                    </a>
+                    <button class="btn btn-secondary" onclick="loadReports()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reports Container -->
+            <div id="reportsContainer">
+                <div class="text-center">
+                    <div class="loading"></div>
+                    <p>Loading reports...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="container" style="margin-top: 3rem;">
+        <div class="form-section">
+            <h3 style="margin-bottom: 2rem; text-align: center;">
+                <i class="fas fa-chart-bar"></i> Report Statistics
+            </h3>
+            <div class="feature-grid" style="margin-top: 0;">
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #ffc107;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Pending</h3>
+                    <p id="pendingCount">Loading...</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #17a2b8;">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>In Progress</h3>
+                    <p id="progressCount">Loading...</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #28a745;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Resolved</h3>
+                    <p id="resolvedCount">Loading...</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #667eea;">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3>Total Reports</h3>
+                    <p id="totalCount">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel (Optional Feature) -->
+    <section class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+        <div class="form-section">
+            <h3 style="margin-bottom: 1rem;">
+                <i class="fas fa-user-shield"></i> Admin Panel
+            </h3>
+            <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 5px;">
+                <p style="margin-bottom: 1rem;">Administrative features for managing the FixIt system:</p>
+                <ul style="margin-bottom: 1rem;">
+                    <li>Update report statuses</li>
+                    <li>View detailed analytics</li>
+                    <li>Export reports data</li>
+                    <li>Manage user accounts</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="alert('Admin login feature coming soon!')">
+                    <i class="fas fa-sign-in-alt"></i> Admin Login
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 FixIt - Public Problem Reporting System</p>
+            <p>Developed by Faraz Hussain & Ali Raza - Sukkur IBA University</p>
+            <p>Making communities better, one report at a time</p>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+    <script>
+        // Extend the dashboard functionality
+        function updateStatistics(reports) {
+            const stats = {
+                pending: 0,
+                inProgress: 0,
+                resolved: 0,
+                total: reports.length
+            };
+            
+            reports.forEach(report => {
+                switch(report.status) {
+                    case 'Pending':
+                        stats.pending++;
+                        break;
+                    case 'In Progress':
+                        stats.inProgress++;
+                        break;
+                    case 'Resolved':
+                        stats.resolved++;
+                        break;
+                }
+            });
+            
+            document.getElementById('pendingCount').textContent = stats.pending;
+            document.getElementById('progressCount').textContent = stats.inProgress;
+            document.getElementById('resolvedCount').textContent = stats.resolved;
+            document.getElementById('totalCount').textContent = stats.total;
+        }
+        
+        // Override the displayReports function to include statistics
+        const originalDisplayReports = window.displayReports;
+        window.displayReports = function(reports) {
+            originalDisplayReports(reports);
+            updateStatistics(reports);
+        };
+        
+        // Add keyboard shortcut for refresh
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                loadReports();
+            }
+        });
+    </script>
+</body>
+</html>
